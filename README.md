@@ -24,7 +24,7 @@ But we don't have enough gold right now. Additionally, if we go back to the **Re
 
 ![redeem-failed](https://github.com/user-attachments/assets/026683f7-7934-4892-baf3-8501408b878d)
 
-So let's explore the source code to find the solution. In `/src/index.js`, we can notice at the `/redeeem` endpoint:
+So let's explore the source code to find the solution. In `/src/index.js`, we can notice at the `/redeem` endpoint:
 
 ```javascript
 app.post('/redeem', authMiddleware, function (req, res) {
@@ -53,7 +53,7 @@ app.post('/redeem', authMiddleware, function (req, res) {
 });
 ```
 
-You can see that it first check whether the code you submitted is valid, then looping through the code objects stored in your username to check if the code was used. However, you will notice that they use `===` operator to compare the current **code** object with the one in **logs**. So, this comparison still return `false` if the **code** object references to a different object in memory although the contents are the same. Therefore, we will find when the **code** object will be reassigned. And we found this:
+You can see that it first check whether the code you submitted is valid, then looping through the `code` objects stored in your username to check if the code was used. However, you will notice that they use `===` operator to compare the current `code` object with the one in `logs`. So, this comparison still return `false` if the `code` object references to a different object in memory although the contents are the same. Therefore, we will find when the `code` object will be reassigned. And we found this:
 
 ```javascript
 app.get('/api/info', (req, res) => {
@@ -64,9 +64,9 @@ app.get('/api/info', (req, res) => {
 
 So now, here is the stratecy that we will use to increase the **golds**:
 
-1. Send a request to `/api/info` to reassign the **code** object.
-2. Send a request to `/redeem` with the current **code** and the cookie that stores your **username**.
-3. Repeat until your **balance** reaches 100000.
+1. Send a request to `/api/info` to reassign the `code` object.
+2. Send a request to `/redeem` with the current `code` and the cookie that stores your `username`.
+3. Repeat until your `balance` reaches `100,000`.
 
 Here is the script:
 
@@ -112,7 +112,7 @@ async function getBalance() {
 })();
 ```
 
-After that, just go to **Shop** and buy the flag, here is my flag: 
+After that, just go back to the **Shop** page and buy the flag, here is my flag: 
 
 `HCMUS-CTF{5trIct_eqU@l!Ty_!SN't_!T_101193d7181cc883}`
 
